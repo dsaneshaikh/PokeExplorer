@@ -41,11 +41,13 @@ function App() {
 
   // Update total pages whenever filtered list changes
   useEffect(() => {
-    setTotalPages(Math.ceil(filteredList.length / itemsPerPage));
-    setCurrentPage(1); // Reset to first page whenever the filter or search changes
-  }, [searchTerm, selectedType]);
+    if (!loading) {
+      setTotalPages(Math.ceil(filteredList.length / itemsPerPage));
+      setCurrentPage(1);
+    }
+  }, [selectedType, searchTerm, loading]);
 
-  // Paginate the filtered list
+  // Slice current page data
   const paginatedList = filteredList.slice(
     (currentPage - 1) * itemsPerPage,
     currentPage * itemsPerPage
@@ -127,7 +129,11 @@ function App() {
           >
             Previous
           </button>
-          <span className="self-center text-gray-700">{`Page ${currentPage} of ${totalPages}`}</span>
+          <span className="self-center text-gray-700">
+            {totalPages === 0
+              ? "No pages"
+              : `Page ${currentPage} of ${totalPages}`}
+          </span>
           <button
             onClick={() => handlePageChange(currentPage + 1)}
             disabled={currentPage === totalPages}
