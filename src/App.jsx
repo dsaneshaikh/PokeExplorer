@@ -10,7 +10,29 @@ function App() {
   const [selectedType, setSelectedType] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(0);
-  const itemsPerPage = 20;
+  const [itemsPerPage, setItemsPerPage] = useState(20);
+
+  useEffect(() => {
+    // Adjust items per page based on screen size
+    const updateItemsPerPage = () => {
+      if (window.innerWidth <= 640) {
+        setItemsPerPage(6); // For mobile
+      } else if (window.innerWidth <= 768) {
+        setItemsPerPage(16); // For tablets
+      } else {
+        setItemsPerPage(20); // For larger screens
+      }
+    };
+
+    // Initial call to set items per page
+    updateItemsPerPage();
+    // Update items per page when screen size changes
+    window.addEventListener("resize", updateItemsPerPage);
+
+    return () => {
+      window.removeEventListener("resize", updateItemsPerPage);
+    };
+  }, []);
 
   useEffect(() => {
     async function fetchAll() {
@@ -45,7 +67,7 @@ function App() {
       setTotalPages(Math.ceil(filteredList.length / itemsPerPage));
       setCurrentPage(1);
     }
-  }, [selectedType, searchTerm, loading]);
+  }, [selectedType, searchTerm, loading, itemsPerPage]);
 
   // Slice current page data
   const paginatedList = filteredList.slice(
