@@ -1,23 +1,28 @@
-import { createContext, useContext, useEffect, useState } from "react";
+// src/contexts/FavoritesContext.jsx
+import { createContext, useContext, useState, useEffect } from "react";
 
 const FavoritesContext = createContext();
 
 export function FavoritesProvider({ children }) {
   const [favorites, setFavorites] = useState([]);
 
+  // Load from localStorage on mount
   useEffect(() => {
-    const saved = localStorage.getItem("favorites");
-    if (saved) setFavorites(JSON.parse(saved));
+    const saved = localStorage.getItem("pokemon-favorites");
+    if (saved) {
+      setFavorites(JSON.parse(saved));
+    }
   }, []);
 
+  // Save to localStorage on change
+  useEffect(() => {
+    localStorage.setItem("pokemon-favorites", JSON.stringify(favorites));
+  }, [favorites]);
+
   const toggleFavorite = (id) => {
-    setFavorites((prev) => {
-      const newFavs = prev.includes(id)
-        ? prev.filter((f) => f !== id)
-        : [...prev, id];
-      localStorage.setItem("favorites", JSON.stringify(newFavs));
-      return newFavs;
-    });
+    setFavorites((prev) =>
+      prev.includes(id) ? prev.filter((fId) => fId !== id) : [...prev, id]
+    );
   };
 
   return (

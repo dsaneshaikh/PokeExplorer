@@ -1,18 +1,37 @@
+// src/pages/FavoritesPage.jsx
 import { useFavorites } from "../contexts/FavoritesContext";
 import { usePokemon } from "../contexts/PokemonContext";
 import PokemonCard from "../components/features/Pokemon/PokemonCard";
-
+import LoadingSpinner from "../components/common/LoadingSpinner";
+import { useMemo } from "react";
 const FavoritesPage = () => {
   const { favorites } = useFavorites();
-  const { pokemonList } = usePokemon();
+  const { pokemonList, loading, error } = usePokemon();
 
-  const favoritePokemon = pokemonList.filter((p) => favorites.includes(p.id));
+  const favoritePokemon = useMemo(
+    () => pokemonList.filter((p) => favorites.includes(p.id)),
+    [pokemonList, favorites]
+  );
+
+  if (loading) return <LoadingSpinner />;
+
+  if (error)
+    return (
+      <div className="text-red-500 text-center p-4">
+        Error loading Pokémon: {error}
+      </div>
+    );
 
   return (
-    <div className="favorites-page">
-      <h2 className="text-2xl font-bold mb-4">Favorite Pokémon</h2>
+    <div className="container mx-auto px-4 py-8">
+      <h2 className="text-2xl font-bold mb-6">Favorite Pokémon</h2>
+
       {favoritePokemon.length === 0 ? (
-        <p className="text-gray-500">No favorites yet. Start adding some!</p>
+        <div className="text-center p-8 bg-gray-50 rounded-lg">
+          <p className="text-gray-500">
+            No favorites yet. Click the ♡ on Pokémon cards to add some!
+          </p>
+        </div>
       ) : (
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
           {favoritePokemon.map((pokemon) => (
