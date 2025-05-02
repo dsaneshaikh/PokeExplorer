@@ -1,6 +1,6 @@
 // src/pages/HomePage.jsx
 import { usePokemon } from "../contexts/PokemonContext";
-import PokemonFilters from "../components/features/Filter/PokemonFilters";
+import PokemonFilters from "../Components/features/Filter/PokemonFilters";
 import PokemonCard from "../Components/features/Pokemon/PokemonCard";
 import { useMemo } from "react";
 import LoadingSpinner from "../Components/common/LoadingSpinner";
