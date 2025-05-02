@@ -1,7 +1,7 @@
 // src/pages/ComparePage.jsx
 import { useState } from "react";
 import { usePokemon } from "../contexts/PokemonContext";
-import PokemonCard from "../components/features/Pokemon/PokemonCard";
+import PokemonCard from "../Components/features/Pokemon/PokemonCard";
 import TypeBadge from "../Components/common/TypeBadge";
 
 const ComparePage = () => {

@@ -1,8 +1,8 @@
 // src/pages/FavoritesPage.jsx
 import { useFavorites } from "../contexts/FavoritesContext";
 import { usePokemon } from "../contexts/PokemonContext";
-import PokemonCard from "../components/features/Pokemon/PokemonCard";
-import LoadingSpinner from "../components/common/LoadingSpinner";
+import PokemonCard from "../Components/features/Pokemon/PokemonCard";
+import LoadingSpinner from "../Components/common/LoadingSpinner";
 import { useMemo } from "react";
 const FavoritesPage = () => {
   const { favorites } = useFavorites();
