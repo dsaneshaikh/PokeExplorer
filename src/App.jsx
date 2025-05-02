@@ -7,7 +7,7 @@ import FavoritesPage from "./pages/FavoritesPage";
 import { PokemonProvider } from "./contexts/PokemonContext";
 import { FavoritesProvider } from "./contexts/FavoritesContext";
 import ErrorBoundary from "./Components/common/ErrorBoundary";
-
+import ComparePage from "./pages/ComparePage";
 function App() {
   return (
     <Router>
@@ -20,6 +20,7 @@ function App() {
                 <Route path="/" element={<HomePage />} />
                 <Route path="/pokemon/:id" element={<DetailPage />} />
                 <Route path="/favorites" element={<FavoritesPage />} />
+                <Route path="/compare" element={<ComparePage />} />
               </Routes>
             </main>
           </ErrorBoundary>

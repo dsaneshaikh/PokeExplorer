@@ -1,4 +1,4 @@
-// components/Header.jsx
+// src/components/Header.jsx
 import { Link } from "react-router-dom";
 
 const Header = () => {
@@ -13,6 +13,12 @@ const Header = () => {
             </h1>
           </Link>
           <nav className="flex items-center space-x-4">
+            <Link
+              to="/compare"
+              className="text-white hover:text-red-100 transition-colors"
+            >
+              Compare
+            </Link>
             <Link
               to="/favorites"
               className="text-white hover:text-red-100 transition-colors"
