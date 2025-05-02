@@ -43,6 +43,7 @@ const PokemonFilters = () => {
 
   const removeType = (typeToRemove) => {
     setSelectedTypes((prev) => prev.filter((type) => type !== typeToRemove));
+    setCurrentPage(1);
   };
 
   return (
@@ -59,7 +60,6 @@ const PokemonFilters = () => {
       </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        {/* Selected Types */}
         {selectedTypes.length > 0 && (
           <div className="sm:col-span-full lg:col-span-full space-y-2">
             <div className="flex flex-wrap gap-2">
@@ -90,7 +90,10 @@ const PokemonFilters = () => {
           <input
             type="text"
             value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
+            onChange={(e) => {
+              setSearchTerm(e.target.value);
+              setCurrentPage(1);
+            }}
             placeholder="Enter Pokémon name..."
             className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500"
           />
@@ -110,6 +113,7 @@ const PokemonFilters = () => {
                 (o) => o.value
               );
               setSelectedTypes(selected);
+              setCurrentPage(1);
             }}
             className="w-full h-32 px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500 custom-scrollbar"
           >
@@ -133,7 +137,10 @@ const PokemonFilters = () => {
           </label>
           <select
             value={sortBy}
-            onChange={(e) => setSortBy(e.target.value)}
+            onChange={(e) => {
+              setSortBy(e.target.value);
+              setCurrentPage(1);
+            }}
             className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500"
           >
             <option value="id">Number</option>
@@ -148,7 +155,10 @@ const PokemonFilters = () => {
           </label>
           <select
             value={itemsPerPage}
-            onChange={(e) => setItemsPerPage(Number(e.target.value))}
+            onChange={(e) => {
+              setItemsPerPage(Number(e.target.value));
+              setCurrentPage(1);
+            }}
             className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500"
           >
             <option value={10}>10</option>

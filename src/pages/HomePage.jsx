@@ -49,6 +49,17 @@ const HomePage = () => {
     return filteredList.slice(startIndex, startIndex + itemsPerPage);
   }, [filteredList, currentPage, itemsPerPage]);
 
+  // Calculate display indices
+  const startIndex = useMemo(
+    () => (currentPage - 1) * itemsPerPage + 1,
+    [currentPage, itemsPerPage]
+  );
+
+  const endIndex = useMemo(
+    () => Math.min(currentPage * itemsPerPage, filteredList.length),
+    [currentPage, itemsPerPage, filteredList.length]
+  );
+
   if (loading) {
     return (
       <div className="flex justify-center items-center min-h-[400px]">
@@ -71,7 +82,15 @@ const HomePage = () => {
 
       <div className="my-6 flex flex-col sm:flex-row justify-between items-center gap-4">
         <div className="text-sm text-gray-600">
-          Showing {paginatedList.length} of {filteredList.length} results
+          {filteredList.length === 0 ? (
+            "No results found"
+          ) : (
+            <>
+              Showing <span className="font-medium">{startIndex}</span> -{" "}
+              <span className="font-medium">{endIndex}</span> of{" "}
+              <span className="font-medium">{filteredList.length}</span> results
+            </>
+          )}
         </div>
 
         <div className="flex gap-2">
@@ -84,7 +103,7 @@ const HomePage = () => {
           </button>
           <button
             onClick={() => setCurrentPage(currentPage + 1)}
-            disabled={currentPage * itemsPerPage >= filteredList.length}
+            disabled={endIndex >= filteredList.length}
             className="px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 disabled:opacity-50 disabled:hover:bg-red-500 transition-colors"
           >
             Next
