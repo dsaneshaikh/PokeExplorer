@@ -3,6 +3,8 @@ import { usePokemon } from "../contexts/PokemonContext";
 import PokemonFilters from "../components/features/Filter/PokemonFilters";
 import PokemonCard from "../components/features/Pokemon/PokemonCard";
 import { useMemo } from "react";
+import LoadingSpinner from "../Components/common/LoadingSpinner";
+
 const HomePage = () => {
   const {
     pokemonList,
@@ -20,6 +22,9 @@ const HomePage = () => {
     setCurrentPage,
   } = usePokemon();
 
+  // Ensure selectedTypes is always an array
+  const types = Array.isArray(selectedTypes) ? selectedTypes : [];
+
   const filteredList = useMemo(() => {
     return pokemonList
       .filter((pokemon) => {
@@ -27,8 +32,8 @@ const HomePage = () => {
           .toLowerCase()
           .includes(searchTerm.toLowerCase());
         const matchesTypes =
-          selectedTypes.length === 0 ||
-          selectedTypes.every((type) =>
+          types.length === 0 ||
+          types.every((type) =>
             pokemon.types.some((t) => t.type.name === type)
           );
         return matchesSearch && matchesTypes;
@@ -37,7 +42,7 @@ const HomePage = () => {
         if (sortBy === "name") return a.name.localeCompare(b.name);
         return a.id - b.id;
       });
-  }, [pokemonList, searchTerm, selectedTypes, sortBy]);
+  }, [pokemonList, searchTerm, types, sortBy]);
 
   const paginatedList = useMemo(() => {
     const startIndex = (currentPage - 1) * itemsPerPage;
@@ -46,15 +51,15 @@ const HomePage = () => {
 
   if (loading) {
     return (
-      <div className="flex justify-center items-center h-64">
-        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-red-500"></div>
+      <div className="flex justify-center items-center min-h-[400px]">
+        <LoadingSpinner />
       </div>
     );
   }
 
   if (error) {
     return (
-      <div className="p-4 bg-red-100 text-red-700 rounded-lg">
+      <div className="p-4 bg-red-50 border border-red-200 text-red-700 rounded-lg mx-4 mt-4">
         Error loading Pokémon: {error}
       </div>
     );
@@ -64,33 +69,42 @@ const HomePage = () => {
     <div className="container mx-auto px-4 py-8">
       <PokemonFilters />
 
-      <div className="my-4 flex justify-between items-center">
-        <span className="text-gray-600">
+      <div className="my-6 flex flex-col sm:flex-row justify-between items-center gap-4">
+        <div className="text-sm text-gray-600">
           Showing {paginatedList.length} of {filteredList.length} results
-        </span>
+        </div>
+
         <div className="flex gap-2">
           <button
             onClick={() => setCurrentPage(Math.max(1, currentPage - 1))}
             disabled={currentPage === 1}
-            className="px-4 py-2 bg-gray-200 rounded disabled:opacity-50"
+            className="px-4 py-2 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 disabled:opacity-50 disabled:hover:bg-white transition-colors"
           >
             Previous
           </button>
           <button
             onClick={() => setCurrentPage(currentPage + 1)}
             disabled={currentPage * itemsPerPage >= filteredList.length}
-            className="px-4 py-2 bg-red-500 text-white rounded disabled:opacity-50"
+            className="px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 disabled:opacity-50 disabled:hover:bg-red-500 transition-colors"
           >
             Next
           </button>
         </div>
       </div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-        {paginatedList.map((pokemon) => (
-          <PokemonCard key={pokemon.id} pokemon={pokemon} />
-        ))}
-      </div>
+      {filteredList.length === 0 ? (
+        <div className="text-center p-8 bg-white rounded-lg border border-gray-200">
+          <p className="text-gray-500">
+            No Pokémon found matching your criteria
+          </p>
+        </div>
+      ) : (
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+          {paginatedList.map((pokemon) => (
+            <PokemonCard key={pokemon.id} pokemon={pokemon} />
+          ))}
+        </div>
+      )}
     </div>
   );
 };

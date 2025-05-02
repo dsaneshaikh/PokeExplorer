@@ -7,7 +7,7 @@ export function PokemonProvider({ children }) {
   const [state, setState] = useState({
     pokemonList: [],
     searchTerm: "",
-    selectedTypes: [],
+    selectedTypes: [], // Ensured array initialization
     sortBy: "id",
     itemsPerPage: 20,
     currentPage: 1,
@@ -18,22 +18,27 @@ export function PokemonProvider({ children }) {
   useEffect(() => {
     const fetchPokemonData = async () => {
       try {
-        // Fetch basic list of first 150 Pokémon
+        // First fetch the list of Pokémon
         const listResponse = await fetch(
           "https://pokeapi.co/api/v2/pokemon?limit=150"
         );
+        if (!listResponse.ok) throw new Error("Failed to fetch Pokémon list");
         const listData = await listResponse.json();
 
-        // Fetch detailed data in batches
+        // Fetch detailed data in batches to avoid rate limiting
         const batchSize = 20;
         const detailedPokemon = [];
 
         for (let i = 0; i < listData.results.length; i += batchSize) {
           const batch = listData.results.slice(i, i + batchSize);
-          const batchRequests = batch.map((p) =>
-            fetch(p.url).then((res) => res.json())
+          const batchPromises = batch.map((p) =>
+            fetch(p.url).then((res) => {
+              if (!res.ok) throw new Error("Failed to fetch Pokémon details");
+              return res.json();
+            })
           );
-          const batchResults = await Promise.all(batchRequests);
+
+          const batchResults = await Promise.all(batchPromises);
           detailedPokemon.push(...batchResults);
         }
 
@@ -47,7 +52,7 @@ export function PokemonProvider({ children }) {
         setState((prev) => ({
           ...prev,
           loading: false,
-          error: error.message,
+          error: error.message || "Failed to load Pokémon data",
         }));
       }
     };
@@ -57,16 +62,40 @@ export function PokemonProvider({ children }) {
 
   const value = useMemo(
     () => ({
+      // State values
       ...state,
+
+      // State setters with validation
       setSearchTerm: (term) =>
-        setState((prev) => ({ ...prev, searchTerm: term })),
+        setState((prev) => ({
+          ...prev,
+          searchTerm: typeof term === "string" ? term : "",
+        })),
+
       setSelectedTypes: (types) =>
-        setState((prev) => ({ ...prev, selectedTypes: types })),
-      setSortBy: (sort) => setState((prev) => ({ ...prev, sortBy: sort })),
+        setState((prev) => ({
+          ...prev,
+          selectedTypes: Array.isArray(types) ? types : [],
+        })),
+
+      setSortBy: (sort) =>
+        setState((prev) => ({
+          ...prev,
+          sortBy: ["id", "name"].includes(sort) ? sort : "id",
+        })),
+
       setItemsPerPage: (size) =>
-        setState((prev) => ({ ...prev, itemsPerPage: size })),
+        setState((prev) => ({
+          ...prev,
+          itemsPerPage:
+            Number.isInteger(size) && [10, 20, 50].includes(size) ? size : 20,
+        })),
+
       setCurrentPage: (page) =>
-        setState((prev) => ({ ...prev, currentPage: page })),
+        setState((prev) => ({
+          ...prev,
+          currentPage: Number.isInteger(page) && page > 0 ? page : 1,
+        })),
     }),
     [state]
   );
@@ -76,4 +105,10 @@ export function PokemonProvider({ children }) {
   );
 }
 
-export const usePokemon = () => useContext(PokemonContext);
+export const usePokemon = () => {
+  const context = useContext(PokemonContext);
+  if (!context) {
+    throw new Error("usePokemon must be used within a PokemonProvider");
+  }
+  return context;
+};

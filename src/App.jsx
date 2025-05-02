@@ -14,15 +14,17 @@ function App() {
       <PokemonProvider>
         <FavoritesProvider>
           <ErrorBoundary>
-            <Header />
-            <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-              <Routes>
-                <Route path="/" element={<HomePage />} />
-                <Route path="/pokemon/:id" element={<DetailPage />} />
-                <Route path="/favorites" element={<FavoritesPage />} />
-                <Route path="/compare" element={<ComparePage />} />
-              </Routes>
-            </main>
+            <div className="min-h-screen bg-[#E0F7FA]">
+              <Header />
+              <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 ">
+                <Routes>
+                  <Route path="/" element={<HomePage />} />
+                  <Route path="/pokemon/:id" element={<DetailPage />} />
+                  <Route path="/favorites" element={<FavoritesPage />} />
+                  <Route path="/compare" element={<ComparePage />} />
+                </Routes>
+              </main>
+            </div>
           </ErrorBoundary>
         </FavoritesProvider>
       </PokemonProvider>

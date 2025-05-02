@@ -3,25 +3,35 @@ import { Link } from "react-router-dom";
 
 const Header = () => {
   return (
-    <header className="bg-red-600 shadow-sm">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-        <div className="flex items-center justify-between">
-          <Link to="/" className="flex items-center">
-            <img src="/pokeball.png" className="h-8 w-8 mr-3" alt="PokéBall" />
-            <h1 className="text-white text-2xl font-bold tracking-tight">
+    <header className="bg-red-600 shadow-sm h-25 relative">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-full">
+        <div className="flex items-center justify-between h-full">
+          {/* Logo container */}
+          <Link to="/" className="flex items-center space-x-3">
+            <img src="/pokeball.png" className="h-10 w-10" alt="PokéBall" />
+          </Link>
+
+          {/* Centered title */}
+          <div className="absolute left-1/2 transform -translate-x-1/2">
+            <h1 className="text-white text-4xl font-bold tracking-tight text-center">
               PokéExplorer
             </h1>
-          </Link>
-          <nav className="flex items-center space-x-4">
+            <p className="text-white text-sm text-center mt-1">
+              Explore the original 150 Pokémon
+            </p>
+          </div>
+
+          {/* Navigation links */}
+          <nav className="flex items-center space-x-6">
             <Link
               to="/compare"
-              className="text-white hover:text-red-100 transition-colors"
+              className="text-white hover:text-red-100 transition-colors text-lg"
             >
               Compare
             </Link>
             <Link
               to="/favorites"
-              className="text-white hover:text-red-100 transition-colors"
+              className="text-white hover:text-red-100 transition-colors text-lg"
             >
               Favorites
             </Link>
