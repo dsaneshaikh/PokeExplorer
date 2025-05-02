@@ -8,7 +8,7 @@ const Header = () => {
         <div className="flex items-center justify-between h-full">
           {/* Logo container */}
           <Link to="/" className="flex items-center space-x-3">
-            <img src="/pokeball.png" className="h-10 w-10" alt="PokéBall" />
+            <img src="/pokemon-icon.png" className="h-10 w-10" alt="PokéBall" />
           </Link>
 
           {/* Centered title */}
@@ -23,6 +23,12 @@ const Header = () => {
 
           {/* Navigation links */}
           <nav className="flex items-center space-x-6">
+            <Link
+              to="/random"
+              className="bg-red-700 text-white px-4 py-2 rounded-lg hover:bg-red-800 transition-colors text-lg shadow-md"
+            >
+              Random
+            </Link>
             <Link
               to="/compare"
               className="text-white hover:text-red-100 transition-colors text-lg"
